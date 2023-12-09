@@ -49,8 +49,12 @@ void erase_area(Area *area) {
 }
 
 void delete_area(Area *area) {
-    // libération de la mémoire
     erase_area(area);
+    // clear each column
+    for (int i = 0; i < area->width; i++) {
+        free(area->mat[i]);
+    }
+    free(area->mat);
     free(area);
 }
 

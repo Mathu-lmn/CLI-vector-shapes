@@ -119,7 +119,7 @@ void print_polygon(Polygon *polygon) {
 Shape * create_empty_shape(SHAPE_TYPE shape_type) {
     Shape *shp = (Shape *) malloc(sizeof(Shape));
     shp->ptrShape = NULL;
-    shp->id = get_next_id();
+    shp->id = (int) get_next_id();
     shp->shape_type = shape_type;
     return shp;
 }
@@ -180,7 +180,26 @@ Shape * create_polygon_shape(int lst[], int n) {
 }
 
 void delete_shape(Shape *shape) {
-    free(shape->ptrShape);
+    switch (shape->shape_type) {
+        case POINT:
+            delete_point(shape->ptrShape);
+            break;
+        case LINE:
+            delete_line(shape->ptrShape);
+            break;
+        case SQUARE:
+            delete_square(shape->ptrShape);
+            break;
+        case RECTANGLE:
+            delete_rectangle(shape->ptrShape);
+            break;
+        case CIRCLE:
+            delete_circle(shape->ptrShape);
+            break;
+        case POLYGON:
+            delete_polygon(shape->ptrShape);
+            break;
+    }
     free(shape);
 }
 

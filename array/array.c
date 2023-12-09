@@ -37,8 +37,9 @@ int array_insert_element(Array *array, void *element) {
     if (array_get_size(array) >= array_get_size_max(array))
         return -1;
     array->tab[array_get_size(array)] = element;
+    int temp = (int) array->size;
     array->size = array->size + 1;
-    return array->size - 1;
+    return temp;
 }
 
 // Layers

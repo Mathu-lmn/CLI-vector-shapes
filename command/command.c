@@ -48,8 +48,9 @@ void free_cmd(Command *cmd) {
 int read_exec_command(Command *cmd) {
     if (strcmp(cmd->name, "clear") == 0) {
         // clear
-        // clear the screen
-        printf("\e[1;1H\e[2J");
+        // clear the screen (won't work in the integrated terminal somehow)
+        printf("\033[2J");
+        printf("\033[0;0H");
     } else if (strcmp(cmd->name, "exit") == 0) {
         // exit
         // exit the program
@@ -139,10 +140,12 @@ int read_exec_command(Command *cmd) {
                 return 1;
             }
         }
+        printf("Aucune forme associee a cet ID\n");
     } else if (strcmp(cmd->name, "erase") == 0) {
         // erase all the shapes
         erase_area(current_area);
-        printf("\e[1;1H\e[2J");
+        printf("\033[2J");
+        printf("\033[0;0H");
     } else if (strcmp(cmd->name, "help") == 0) {
         // help
         // display the help (all commands with their parameters)
@@ -168,17 +171,13 @@ int read_exec_command(Command *cmd) {
 void read_from_stdin(Command *cmd) {
     char *line = malloc(100 * sizeof(char));
     fgets(line, 100, stdin);
-    int len = strlen(line);
+    size_t len = strlen(line);
     if (len > 0 && line[len - 1] == '\n')
         line[len - 1] = '\0';
 
     // clear the previous command
-    cmd->int_size = 0;
-    cmd->str_size = 0;
-    for (int i = 0; i < 10; ++i) {
-        cmd->int_params[i] = 0;
-        cmd->str_params[i] = NULL;
-    }
+    free_cmd(cmd);
+    cmd = create_commande();
     // save the first word in cmd->name
     char *name = strtok(line, " ");
     if (name != NULL) {
